@@ -20,8 +20,19 @@ public class MyClassLoader {
 		this.m_config = new Properties();
 		this.m_config.load(in);
 		
+		File dir = new File(filename);
+		String path = dir.getCanonicalPath();
+		String root_path = path.substring(0,path.length()-dir.getName().length());
+		
 		//load jar file
 		String jar_path = this.m_config.getProperty(name,name);
+		
+		//check has root
+		String root_flag = jar_path.substring(0, 1);
+		if ( false == root_flag.equals("/") && false == root_flag.equals("\\") ) {
+			jar_path = root_path + jar_path;
+		}
+		
 		File file = new File(jar_path);
 		URL url = file.toURI().toURL();
 		this.m_loader = new URLClassLoader(new URL[] {url});
