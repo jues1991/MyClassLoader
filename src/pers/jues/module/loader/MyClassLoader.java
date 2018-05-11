@@ -11,12 +11,29 @@ import java.util.Properties;
 public class MyClassLoader {
 	protected Properties m_config;
 	protected String m_name;
+	protected String m_config_path;
 	protected URLClassLoader m_loader = null;
 	
 	
 	public MyClassLoader( String name, String filename ) throws IOException {
+		this.loadConfig(name, filename);
+	}
+	
+	
+	//name
+	public String name() {
+		return this.m_name;
+	}
+	
+	
+	//loadConfig
+	public void loadConfig( String name, String filename ) throws IOException {
+		//name
+		this.m_name = name;
+		
 		//load configure file
 		InputStream in = new FileInputStream(filename);
+		this.m_config_path = filename;
 		this.m_config = new Properties();
 		this.m_config.load(in);
 		
@@ -36,6 +53,12 @@ public class MyClassLoader {
 		File file = new File(jar_path);
 		URL url = file.toURI().toURL();
 		this.m_loader = new URLClassLoader(new URL[] {url});
+	}
+	
+	
+    //reloadConfig
+	public void reloadConfig() throws IOException {
+		this.loadConfig(this.m_name,this.m_config_path);
 	}
 	
 	
